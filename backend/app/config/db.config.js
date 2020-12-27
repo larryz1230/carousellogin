@@ -2,7 +2,7 @@ module.exports = {
   HOST: "localhost",
   USER: "code4real",
   PASSWORD: "teamc4r",
-  DB: "code4real",
+  DB: "carousel",
   dialect: "mysql",
   pool: {
     max: 5,
