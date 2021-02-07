@@ -16,6 +16,7 @@ exports.create = (req, res) => {
   const tutorial = {
     title: req.body.title,
     description: req.body.description,
+    googleid: req.body.googleid,
     published: req.body.published ? req.body.published : false
   };
 
@@ -134,6 +135,47 @@ exports.deleteAll = (req, res) => {
 // find all published Tutorial
 exports.findAllPublished = (req, res) => {
   Tutorial.findAll({ where: { published: true } })
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving tutorials."
+      });
+    });
+};
+
+//logs in
+// exports.login = (req, res) => {
+//   const gid = req.params.googleid;
+
+//   Tutorial.update(req.body, {
+//     where: { googleid: gid }
+//   })
+//     .then(num => {
+//       if (num == 1) {
+//         res.send({
+//           message: "Success."
+//         });
+//       } else {
+//         res.send({
+//           message: `You do not have an account`
+//         });
+//       }
+//     })
+//     .catch(err => {
+//       res.status(500).send({
+//         message: "Error logging in =" + gid
+//       });
+//     });
+// };
+
+exports.login = (req, res) => {
+  const googleid = req.query.googleid;
+  var condition = googleid ? { googleid: { [Op.like]: `%${googleid}%` } } : null;
+
+  Tutorial.login({ where: condition })
     .then(data => {
       res.send(data);
     })

@@ -9,6 +9,10 @@ module.exports = (sequelize, Sequelize) => {
     published: {
       type: Sequelize.BOOLEAN
     }
+    ,
+    googleid: {
+      type: Sequelize.STRING(1000)
+    }
   });
 
   return Tutorial;

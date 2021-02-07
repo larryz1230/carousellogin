@@ -24,5 +24,7 @@ module.exports = app => {
   // Delete all Tutorials
   router.delete("/", tutorials.deleteAll);
 
+  router.get("/googleid", tutorials.login);
+
   app.use('/api/tutorials', router);
 };

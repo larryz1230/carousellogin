@@ -31,21 +31,32 @@
       <h4>You submitted successfully!</h4>
       <button class="btn btn-success" @click="newTutorial">Add</button>
     </div>
+
+    <button v-google-signin-button="clientId" class="google-signin-button"> Continue with Google</button>
+    <button @click="login">Authentication</button>
   </div>
+
+  
 </template>
 
 <script>
 import TutorialDataService from "../services/TutorialDataService";
+import GoogleSignInButton from 'vue-google-signin-button-directive'
 
 export default {
+  directives: {
+    GoogleSignInButton
+  },
   name: "add-tutorial",
   data() {
     return {
+      clientId: '266665755285-1ko4rd39v8ke1criuutid8s65cgnlvve.apps.googleusercontent.com',
       tutorial: {
         id: null,
         title: "",
         description: "",
-        published: false
+        published: false,
+        googleid: ""
       },
       submitted: false
     };
@@ -54,7 +65,8 @@ export default {
     saveTutorial() {
       var data = {
         title: this.tutorial.title,
-        description: this.tutorial.description
+        description: this.tutorial.description,
+        googleid: this.tutorial.googleid,
       };
 
       TutorialDataService.create(data)
@@ -71,6 +83,25 @@ export default {
     newTutorial() {
       this.submitted = false;
       this.tutorial = {};
+    },
+    login() {
+      TutorialDataService.login(this.tutorial.googleid)
+        .then(response => {
+          this.tutorials = response.data;
+          console.log(response.data);
+          console.log("googleid: " + this.tutorial.googleid);
+        })
+        .catch(e => {
+          console.log(e);
+        });
+    },
+    OnGoogleAuthSuccess (idToken) {
+      console.log(idToken);
+      this.tutorial.googleid = idToken,
+      console.log(this.tutorial.googleid)
+    },
+    OnGoogleAuthFail (error) {
+      console.log(error)
     }
   }
 };
@@ -80,5 +111,14 @@ export default {
 .submit-form {
   max-width: 300px;
   margin: auto;
+}
+.google-signin-button {
+  color: white;
+  background-color: red;
+  height: 50px;
+  font-size: 16px;
+  border-radius: 10px;
+  padding: 10px 20px 25px 20px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 </style>
