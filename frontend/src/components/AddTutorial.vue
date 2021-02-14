@@ -32,8 +32,6 @@
       <button class="btn btn-success" @click="newTutorial">Add</button>
     </div>
 
-    <button v-google-signin-button="clientId" class="google-signin-button"> Continue with Google</button>
-    <button @click="login">Authentication</button>
   </div>
 
   
@@ -56,7 +54,6 @@ export default {
         title: "",
         description: "",
         published: false,
-        googleid: ""
       },
       submitted: false
     };
@@ -84,25 +81,6 @@ export default {
       this.submitted = false;
       this.tutorial = {};
     },
-    login() {
-      TutorialDataService.login(this.tutorial.googleid)
-        .then(response => {
-          this.tutorials = response.data;
-          console.log(response.data);
-          console.log("googleid: " + this.tutorial.googleid);
-        })
-        .catch(e => {
-          console.log(e);
-        });
-    },
-    OnGoogleAuthSuccess (idToken) {
-      console.log(idToken);
-      this.tutorial.googleid = idToken,
-      console.log(this.tutorial.googleid)
-    },
-    OnGoogleAuthFail (error) {
-      console.log(error)
-    }
   }
 };
 </script>
